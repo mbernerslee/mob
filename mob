@@ -1,0 +1,10 @@
+#!/bin/bash
+
+sessions=$(tmux ls)
+echo $sessions
+
+if [[ $sessions == *"funtime"* ]]; then
+  tmux a -t funtime
+else
+  tmux new -s funtime
+fi
