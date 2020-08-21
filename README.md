@@ -8,7 +8,7 @@ lets you run the command `mob` in your terminal which
 This is meant for mob programming sessions, for devs who are too lazy or incometent to learn TMUX properly
 
 Supported Systems
-- Anything that uses bash and has a ~/.bashrc file
+- Anything that has bash and has a ~/.bashrc file
 
 Prerequisites
 - tmux installed on your system
