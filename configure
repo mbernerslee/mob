@@ -20,7 +20,7 @@ else
   echo "mob() {
   $DIR/mob
 }" >> ~/.bashrc
-  echo "added mob function to you bashrc. run 'source ~/.bashrc' then 'mob'"
+  echo "added mob function to you bashrc"
   echo "Configured!"
   echo "run 'source ~/.bashrc' then 'mob'"
 fi
