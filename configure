@@ -2,25 +2,4 @@
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
-line1="mob() {"
-line1_match=$(grep -n "$line1" ~/.bashrc)
-line1_match_result=$?
-line1_number=$(echo "$line1_match" | cut -f1 -d:)
-
-line2="  $DIR/mob"
-line2_match=$(grep -n "$line2" ~/.bashrc)
-line2_match_result=$?
-line2_number=$(echo "$line2_match" | cut -f1 -d:)
-
-if [ $line1_match_result == 0 ] && [ $line2_match_result == 0 ]; then
-  if [[ $line2_number == $(($line1_number + 1)) ]]; then
-    echo "Already configured!"
-  fi
-else
-  echo "mob() {
-  $DIR/mob
-}" >> ~/.bashrc
-  echo "added mob function to you bashrc"
-  echo "Configured!"
-  echo "run 'source ~/.bashrc' then 'mob'"
-fi
+ln -sf $DIR/mob ~/.local/bin/mob
