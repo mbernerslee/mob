@@ -1,0 +1,7 @@
+#!/bin/bash
+
+sudo echo "a prompt for sudo" >/dev/null
+
+rm ~/.local/bin/mob
+rm ~/.local/bin/ssh_access
+sudo rm /usr/share/bash-completion/completions/ssh_access

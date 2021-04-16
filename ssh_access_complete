@@ -1,0 +1,16 @@
+#!/bin/bash
+
+# https://devmanual.gentoo.org/tasks-reference/completion/index.html
+# https://itectec.com/unixlinux/bash-autocomplete-of-filename-in-directory/
+_ssh_access() {
+  COMPREPLY=()
+  cur="${COMP_WORDS[COMP_CWORD]}"
+
+  if [ ${#COMP_WORDS[@]} -eq 2 ]; then
+    COMPREPLY=( $(compgen -W "approve revoke" -- ${cur}) )
+  elif [ ${#COMP_WORDS[@]} -eq 3 ]; then
+    COMPREPLY=( $(compgen -W "$(ls ~/.ssh/keys/)" -- ${cur} ) )
+  fi
+}
+
+complete -F _ssh_access ssh_access

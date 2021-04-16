@@ -1,0 +1,48 @@
+#!/bin/bash
+
+find_ssh_key() {
+  dir="$HOME/.ssh/keys/$1"
+  key=$(cat $dir 2> /dev/null)
+  if [ $? -ne 0 ]; then
+    echo "Failed. Could not find file with key name '$1' in $HOME/.ssh/keys"
+    exit 1
+  fi
+
+  echo $key
+}
+
+approve() {
+  key=$(find_ssh_key $1)
+  grep -qxF "$key" ~/.ssh/authorized_keys
+  if [ $? -eq 0 ]; then
+    echo "$1 is already approved"
+    exit 0
+  else
+    echo $key >> $HOME/.ssh/authorized_keys
+    echo "approved $1 for SSH access"
+    exit 0
+  fi
+
+}
+
+revoke() {
+  key=$(find_ssh_key $1)
+  grep -qxF "$key" ~/.ssh/authorized_keys
+  if [ $? -eq 0 ]; then
+    escaped_key="${key//\//\\/}"
+    sed -i "/$escaped_key/d" $HOME/.ssh/authorized_keys
+    echo "revoked $1's SSH access"
+  else
+    echo "$1's SSH access is already revoked"
+    exit 0
+  fi
+}
+
+if [ "$1" == "approve" ]; then
+  approve $2
+elif [ "$1" == "revoke" ]; then
+  revoke $2
+else
+  echo "usage: ssh_access [revoke | approve] [ssh_key_file_name]"
+  exit 1
+fi

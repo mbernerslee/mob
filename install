@@ -1,0 +1,9 @@
+#!/bin/bash
+
+sudo echo "a prompt for sudo" >/dev/null
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+
+ln -sf $DIR/mob ~/.local/bin/mob
+ln -sf $DIR/ssh_access ~/.local/bin/ssh_access
+sudo ln -sf $DIR/ssh_access_complete /usr/share/bash-completion/completions/ssh_access
