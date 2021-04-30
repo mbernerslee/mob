@@ -7,9 +7,9 @@ _ssh_access() {
   cur="${COMP_WORDS[COMP_CWORD]}"
 
   if [ ${#COMP_WORDS[@]} -eq 2 ]; then
-    COMPREPLY=( $(compgen -W "approve revoke" -- ${cur}) )
+    COMPREPLY=( $(compgen -W "approve revoke revoke" -- ${cur}) )
   elif [ ${#COMP_WORDS[@]} -eq 3 ]; then
-    COMPREPLY=( $(compgen -W "$(ls ~/.ssh/keys/)" -- ${cur} ) )
+    COMPREPLY=( $(compgen -W "all $(ls ~/.ssh/keys/)" -- ${cur} ) )
   fi
 }
 

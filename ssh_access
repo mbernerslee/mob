@@ -16,13 +16,10 @@ approve() {
   grep -qxF "$key" ~/.ssh/authorized_keys
   if [ $? -eq 0 ]; then
     echo "$1 is already approved"
-    exit 0
   else
     echo $key >> $HOME/.ssh/authorized_keys
     echo "approved $1 for SSH access"
-    exit 0
   fi
-
 }
 
 revoke() {
@@ -34,15 +31,32 @@ revoke() {
     echo "revoked $1's SSH access"
   else
     echo "$1's SSH access is already revoked"
-    exit 0
   fi
 }
 
-if [ "$1" == "approve" ]; then
+approve_all() {
+  for key in $(ls ~/.ssh/keys/)
+  do
+    approve $key
+  done
+}
+
+revoke_all() {
+  for key in $(ls ~/.ssh/keys/)
+  do
+    revoke $key
+  done
+}
+
+if [ "$1" == "approve" ] && [ "$2" == "all" ]; then
+  approve_all
+elif [ "$1" == "approve" ]; then
   approve $2
+elif [ "$1" == "revoke" ] && [ "$2" == "all" ]; then
+  revoke_all
 elif [ "$1" == "revoke" ]; then
   revoke $2
 else
-  echo "usage: ssh_access [revoke | approve] [ssh_key_file_name]"
+  echo "usage: ssh_access [revoke | approve] [all | ssh_key_file_name]"
   exit 1
 fi
