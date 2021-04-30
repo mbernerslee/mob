@@ -8,7 +8,7 @@ It has two features:
 This is meant for mob programming sessions, for devs who are too lazy or incompetent to learn TMUX properly
 
 2. lets you run the command `ssh_access [approve | revoke] keyname` in your terminal which
-- approved or revokes ssh access to your machine searching your ~/.ssh/keys directory for a file named `keyname`. If found it adds / removes it from your ~/.ssh/authorized_keys file, thus adding or removing ssh access for that key
+- approves or revokes ssh access to your machine searching your ~/.ssh/keys directory for a file named `keyname`. If found it adds / removes it from your ~/.ssh/authorized_keys file, thus adding or removing ssh access for that key
 - you need to add keys to ~/.ssh/keys/ for this to work of course
 
 Supported Systems
