@@ -1,9 +1,28 @@
 #!/bin/bash
 
+install_for_mac() {
+  sudo ln -sf $DIR/mob /usr/local/bin/mob
+  sudo ln -sf $DIR/ssh_access /usr/local/bin/ssh_access
+}
+
+install_for_linux() {
+  ln -sf $DIR/mob ~/.local/bin/mob
+  ln -sf $DIR/ssh_access ~/.local/bin/ssh_access
+  sudo ln -sf $DIR/ssh_access_complete /usr/share/bash-completion/completions/ssh_access
+}
+
 sudo echo "a prompt for sudo" >/dev/null
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
-ln -sf $DIR/mob ~/.local/bin/mob
-ln -sf $DIR/ssh_access ~/.local/bin/ssh_access
-sudo ln -sf $DIR/ssh_access_complete /usr/share/bash-completion/completions/ssh_access
+echo $OSTYPE
+case $OSTYPE in
+  'darwin20')
+    install_for_mac
+    ;;
+  *)
+    install_for_linux
+    ;;
+esac
+
+
