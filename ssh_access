@@ -12,6 +12,15 @@ find_ssh_key() {
 }
 
 approve() {
+  if [ "$1" == "" ]; then
+    echo "I need a key name to approve"
+    exit 1
+  fi
+  ls ~/.ssh/keys | grep $1 /dev/null
+  if [ $? -ne 0 ]; then
+    echo "~/.ssh/keys/$1 does not exist, so I couldn't approve $1, giving up"
+    exit 1
+  fi
   key=$(find_ssh_key $1)
   grep -qxF "$key" ~/.ssh/authorized_keys
   if [ $? -eq 0 ]; then
