@@ -20,6 +20,9 @@ case $OSTYPE in
   'darwin20')
     install_for_mac
     ;;
+  'darwin23')
+    install_for_mac
+    ;;
   *)
     install_for_linux
     ;;

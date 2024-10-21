@@ -18,6 +18,9 @@ case $OSTYPE in
   'darwin20')
     uninstall_mac
     ;;
+  'darwin23')
+    uninstall_mac
+    ;;
   *)
     uninstall_linux
     ;;
