@@ -16,7 +16,7 @@ approve() {
     echo "I need a key name to approve"
     exit 1
   fi
-  ls ~/.ssh/keys | grep $1 /dev/null
+  ls ~/.ssh/keys | grep "$1"
   if [ $? -ne 0 ]; then
     echo "~/.ssh/keys/$1 does not exist, so I couldn't approve $1, giving up"
     exit 1
