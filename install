@@ -1,19 +1,25 @@
 #!/bin/bash
 
+DIR="$(cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd)"
+
 install_for_mac() {
+  sudo echo "a prompt for sudo" >/dev/null
   sudo ln -sf $DIR/mob /usr/local/bin/mob
   sudo ln -sf $DIR/ssh_access /usr/local/bin/ssh_access
 }
 
 install_for_linux() {
+  sudo echo "a prompt for sudo" >/dev/null
   ln -sf $DIR/mob ~/.local/bin/mob
   ln -sf $DIR/ssh_access ~/.local/bin/ssh_access
   sudo ln -sf $DIR/ssh_access_complete /usr/share/bash-completion/completions/ssh_access
 }
 
-sudo echo "a prompt for sudo" >/dev/null
-
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+install_for_android() {
+  ln -sf $DIR/mob ~/.local/bin/mob
+  ln -sf $DIR/ssh_access ~/.local/bin/ssh_access
+  #sudo ln -sf $DIR/ssh_access_complete /usr/share/bash-completion/completions/ssh_access
+}
 
 echo $OSTYPE
 case $OSTYPE in
@@ -23,8 +29,12 @@ case $OSTYPE in
   'darwin23')
     install_for_mac
     ;;
+  'linux-android')
+    install_for_android
+    ;;
   *)
-    install_for_linux
+    echo "This install script doesn't know how to handle your OS of $OSTYPE"
+    exit 1
     ;;
 esac
 
