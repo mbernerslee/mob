@@ -29,6 +29,9 @@ case $OSTYPE in
   'darwin23')
     install_for_mac
     ;;
+  'linux-gnu')
+    install_for_linux
+    ;;
   'linux-android')
     install_for_android
     ;;
