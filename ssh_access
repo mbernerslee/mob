@@ -1,7 +1,7 @@
 #!/bin/bash
 
 find_ssh_key() {
-        dir="$HOME/.ssh/keys/$1"
+  dir="$HOME/.ssh/keys/$1"
   key=$(cat $dir 2>/dev/null)
   if [ $? -ne 0 ]; then
     echo "Failed. Could not find file with key name '$1' in $HOME/.ssh/keys"

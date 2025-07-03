@@ -3,7 +3,7 @@
 # https://devmanual.gentoo.org/tasks-reference/completion/index.html
 # https://itectec.com/unixlinux/bash-autocomplete-of-filename-in-directory/
 _ssh_access() {
-      COMPREPLY=()
+  COMPREPLY=()
   cur="${COMP_WORDS[COMP_CWORD]}"
 
   if [ ${#COMP_WORDS[@]} -eq 2 ]; then

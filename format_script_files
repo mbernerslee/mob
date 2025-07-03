@@ -1,9 +1,3 @@
 #!/bin/bash
 
-#shfmt -i 2 -w ssh_access
-#shfmt -i 2 -w ssh_access_complete
-#shfmt -i 2 -w install
-#shfmt -i 2 -w uninstall
-#shfmt -i 2 -w mob
-#shfmt -i 2 -w format_script_files
 shfmt -i 2 -w ./
