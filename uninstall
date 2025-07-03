@@ -13,16 +13,14 @@ install_linux() {
   sudo rm /usr/share/bash-completion/completions/ssh_access
 }
 
-
 case $OSTYPE in
-  'darwin20')
-    uninstall_mac
-    ;;
-  'darwin23')
-    uninstall_mac
-    ;;
-  *)
-    uninstall_linux
-    ;;
+'darwin20')
+  uninstall_mac
+  ;;
+'darwin23')
+  uninstall_mac
+  ;;
+*)
+  uninstall_linux
+  ;;
 esac
-

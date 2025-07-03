@@ -1,6 +1,6 @@
 #!/bin/bash
 
-DIR="$(cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd)"
+DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
 
 install_for_mac() {
   sudo echo "a prompt for sudo" >/dev/null
@@ -23,22 +23,20 @@ install_for_android() {
 
 echo $OSTYPE
 case $OSTYPE in
-  'darwin20')
-    install_for_mac
-    ;;
-  'darwin23')
-    install_for_mac
-    ;;
-  'linux-gnu')
-    install_for_linux
-    ;;
-  'linux-android')
-    install_for_android
-    ;;
-  *)
-    echo "This install script doesn't know how to handle your OS of $OSTYPE"
-    exit 1
-    ;;
+'darwin20')
+  install_for_mac
+  ;;
+'darwin23')
+  install_for_mac
+  ;;
+'linux-gnu')
+  install_for_linux
+  ;;
+'linux-android')
+  install_for_android
+  ;;
+*)
+  echo "This install script doesn't know how to handle your OS of $OSTYPE"
+  exit 1
+  ;;
 esac
-
-
