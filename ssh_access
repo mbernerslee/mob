@@ -2,7 +2,7 @@
 
 find_ssh_key() {
   dir="$HOME/.ssh/keys/$1"
-  key=$(cat $dir 2> /dev/null)
+  key=$(cat $dir 2>/dev/null)
   if [ $? -ne 0 ]; then
     echo "Failed. Could not find file with key name '$1' in $HOME/.ssh/keys"
     exit 1
@@ -26,7 +26,7 @@ approve() {
   if [ $? -eq 0 ]; then
     echo "$1 is already approved"
   else
-    echo $key >> $HOME/.ssh/authorized_keys
+    echo $key >>$HOME/.ssh/authorized_keys
     echo "approved $1 for SSH access"
   fi
 }
@@ -44,17 +44,111 @@ revoke() {
 }
 
 approve_all() {
-  for key in $(ls ~/.ssh/keys/)
-  do
+  for key in $(ls ~/.ssh/keys/); do
     approve $key
   done
 }
 
 revoke_all() {
-  for key in $(ls ~/.ssh/keys/)
-  do
+  for key in $(ls ~/.ssh/keys/); do
     revoke $key
   done
+}
+
+status() {
+  local keys_dir="$HOME/.ssh/keys"
+  local auth_keys="$HOME/.ssh/authorized_keys"
+
+  # Check if directories/files exist
+  if [[ ! -d "$keys_dir" ]]; then
+    echo "Error: Keys directory $keys_dir does not exist"
+    return 1
+  fi
+
+  if [[ ! -f "$auth_keys" ]]; then
+    echo "Error: authorized_keys file $auth_keys does not exist"
+    return 1
+  fi
+
+  echo "Checking which keys from $keys_dir are authorized on this machine:"
+  echo "================================================================"
+
+  local found_authorized=false
+  declare -A known_keys
+
+  # First pass: check keys from your keys directory
+  for key_file in "$keys_dir"/*; do
+    # Skip if no files match the pattern
+    [[ ! -f "$key_file" ]] && continue
+
+    # Get the basename of the key file (machine name)
+    local machine_name=$(basename "$key_file")
+
+    # Read the public key content
+    local key_content=$(cat "$key_file" 2>/dev/null)
+
+    # Skip empty files or files that can't be read
+    [[ -z "$key_content" ]] && continue
+
+    # Extract just the key part (remove ssh-rsa/ssh-ed25519 prefix and comment suffix)
+    local key_hash=$(echo "$key_content" | awk '{print $2}')
+
+    # Store this key hash as known
+    known_keys["$key_hash"]="$machine_name"
+
+    # Check if this key exists in authorized_keys
+    if grep -q "$key_hash" "$auth_keys" 2>/dev/null; then
+      echo "✓ $machine_name - AUTHORIZED"
+      found_authorized=true
+    else
+      echo "✗ $machine_name - NOT AUTHORIZED"
+    fi
+  done
+
+  if [[ "$found_authorized" == false ]]; then
+    echo ""
+    echo "No authorized keys found from your keys directory."
+  fi
+
+  # Second pass: check for unknown authorized keys
+  echo ""
+  echo "Checking for authorized keys NOT in your keys directory:"
+  echo "======================================================="
+
+  local found_unknown=false
+  local line_num=0
+
+  while IFS= read -r line; do
+    ((line_num++))
+
+    # Skip empty lines and comments
+    [[ -z "$line" || "$line" =~ ^[[:space:]]*# ]] && continue
+
+    # Extract the key hash from the authorized_keys line
+    local auth_key_hash=$(echo "$line" | awk '{print $2}')
+
+    # Skip if we can't extract a key hash
+    [[ -z "$auth_key_hash" ]] && continue
+
+    # Check if this key is in our known keys
+    if [[ -z "${known_keys[$auth_key_hash]}" ]]; then
+      # Extract comment/identifier from the end of the line
+      local key_comment=$(echo "$line" | awk '{for(i=3;i<=NF;i++) printf "%s ", $i; print ""}' | sed 's/[[:space:]]*$//')
+      local key_type=$(echo "$line" | awk '{print $1}')
+
+      echo "? Line $line_num: $key_type key"
+      if [[ -n "$key_comment" ]]; then
+        echo "  Comment: $key_comment"
+      fi
+      echo "  Hash: ${auth_key_hash:0:20}..."
+      echo ""
+      found_unknown=true
+    fi
+  done <"$auth_keys"
+
+  if [[ "$found_unknown" == false ]]; then
+    echo "All authorized keys are accounted for in your keys directory."
+  fi
 }
 
 if [ "$1" == "approve" ] && [ "$2" == "all" ]; then
@@ -65,7 +159,9 @@ elif [ "$1" == "revoke" ] && [ "$2" == "all" ]; then
   revoke_all
 elif [ "$1" == "revoke" ]; then
   revoke $2
+elif [ "$1" == "status" ]; then
+  status
 else
-  echo "usage: ssh_access [revoke | approve] [all | ssh_key_file_name]"
+  echo "usage: ssh_access [revoke | approve | status] [all | ssh_key_file_name]"
   exit 1
 fi
