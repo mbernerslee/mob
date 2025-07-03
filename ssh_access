@@ -97,7 +97,7 @@ status() {
     known_keys["$key_hash"]="$machine_name"
 
     # Check if this key exists in authorized_keys
-    if grep -q "$key_hash" "$auth_keys" 2>/dev/null; then
+    if grep -q "^$key_content$" "$auth_keys" 2>/dev/null; then
       echo "✓ $machine_name - AUTHORIZED"
       found_authorized=true
     else
