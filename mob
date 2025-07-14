@@ -1,10 +1,10 @@
 #!/bin/bash
 
-sessions=$(tmux ls)
-echo $sessions
+sessions=$(tmux ls -F '#S')
+hostname=$(hostname)
 
-if [[ $sessions == *"funtime"* ]]; then
-  tmux a -t funtime
+if [[ $sessions == *"$hostname"* ]]; then
+  tmux a -t "$hostname"
 else
-  tmux new -s funtime
+  tmux new -s "$hostname"
 fi
